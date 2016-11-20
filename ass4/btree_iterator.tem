@@ -1,0 +1,28 @@
+
+
+template <typename T> T& btree_iterator<T>::operator*() const {
+    return _pointer->_elem[_idx];
+}
+
+
+template <typename T> btree_iterator<T>& btree_iterator<T>::operator++(){
+    if( _pointer == nullptr ){
+        _pointer = _btree._head;
+        _idx = 0;
+    } else if( (_idx+1)<_btree._children.size() and _btree._children[_idx+1] != nullptr ){
+        // the pointed element have descendants after,
+        // got down the tree to the left-most descendant node
+        _pointee = _pointer->_children[_idx+1];
+        idx_ = 0;
+        asc_down();
+    } else if( _idx < _pointer->_size-1 ){
+        // point to the next element in current node;
+        ++_idx;
+    } else {
+        // reaches the end of current node, will go up
+        // to parent node.
+        asc_up (operator *());
+    }
+    return *this;
+}
+
